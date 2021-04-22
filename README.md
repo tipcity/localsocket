@@ -15,7 +15,7 @@
 ### install
 
 ```
-npm install localsocket `or` yarn install localsocket
+npm install @tipcity/localsocket `or` yarn install @tipcity/localsocket
 ```
 
 ### usage
@@ -41,7 +41,7 @@ arguments passed to the task callbacks.
 ##### example
 
 ```js
-var LocalSocket = require('localsocket')
+var LocalSocket = require('@tipcity/localsocket')
 
 testingEvent = new LocalSocket("test");
 
