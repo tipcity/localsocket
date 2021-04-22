@@ -29,7 +29,8 @@
     "scripts": {
         "test": "npm run standardize && npm run test-node",
         "standardize": "standard --fix",
-        "test-node": "tape test/*.js"
+        "test-node": "tape test/*.js",
+        "release": "npm publish --access public"
     },
     "funding": [{
             "type": "github",
