@@ -22,7 +22,7 @@ npm install localsocket `or` yarn install localsocket
 
 #### localsocket.on(connected, [callback])
 
-Listen and react to `events` within a sandbox. When a listener is registerd,
+Listen and react to `events` within a sandbox. When a listener is registered,
 it is queued up in an array of suspended rections. Once an `event` is received,
 all the registered callbacks are invoked in order.
 
@@ -58,4 +58,4 @@ Works in all javascript environment
 
 ### license
 
-MIT. Copyright (c) [Rasheed Alabi](http://conquext.com).
+MIT. Copyright (c) [Tipcity](http://tipcity.co).
