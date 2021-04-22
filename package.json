@@ -2,11 +2,7 @@
     "name": "@tipcity/localsocket",
     "description": "Event emitters for everyone",
     "version": "1.0.0",
-    "author": {
-        "name": "Rasheed Alabi",
-        "email": "rasheed@tipcity.co",
-        "url": "https://conquext.com"
-    },
+    "author": "Rasheed Alabi <dev@tipcity.co> (https://conquext.com)",
     "bugs": {
         "url": "https://github.com/tipcity/localsocket/issues"
     },
@@ -47,5 +43,8 @@
             "type": "consulting",
             "url": "https://tipcity.co/support"
         }
-    ]
+    ],
+    "directories": {
+        "test": "test"
+    },
 }
