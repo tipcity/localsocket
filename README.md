@@ -1,11 +1,11 @@
 # LocalSocket [![ci][ci-image]][ci-url] [![npm][npm-image]][npm-url] [![downloads][downloads-image]][downloads-url] [![javascript style guide][standard-image]][standard-url]
 
-[ci-image]: https://img.shields.io/github/workflow/status/conquext/localsocket/ci/master
-[ci-url]: https://github.com/conquext/localsocket/actions
+[ci-image]: https://img.shields.io/github/workflow/status/tipcity/localsocket/ci/master
+[ci-url]: https://github.com/tipcity/localsocket/actions
 [npm-image]: https://img.shields.io/npm/v/localsocket.svg
-[npm-url]: https://npmjs.org/package/localsocket
+[npm-url]: https://npmjs.org/package/@tipcity/localsocket
 [downloads-image]: https://img.shields.io/npm/dm/localsocket.svg
-[downloads-url]: https://npmjs.org/package/localsocket
+[downloads-url]: https://npmjs.org/package/@tipcity/localsocket
 [standard-image]: https://img.shields.io/badge/code_style-standard-brightgreen.svg
 [standard-url]: https://standardjs.com
 
