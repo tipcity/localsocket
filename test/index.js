@@ -3,28 +3,12 @@ const test = require('tape')
 
 const localSocket = new LocalSocket()
 
-// test('functions run in parallel', function (t) {
-//   t.plan(4)
-
-//   const tasks = [
-//     function (cb) {
-//       t.pass('cb 1')
-//       cb(null)
-//     },
-//     function (cb) {
-//       t.pass('cb 2')
-//       cb(null)
-//     },
-//     function (cb) {
-//       t.pass('cb 3')
-//       cb(null)
-//     }
-//   ]
-
-//   parallel(tasks, function (err) {
-//     t.error(err)
-//   })
-// })
+function teardown (cb) {
+  test('teardown', function (t) {
+    localSocket.drop()
+    t.end()
+  })
+}
 
 test('always trigger on single event', function (t) {
   t.plan(4)
@@ -44,6 +28,7 @@ test('always trigger on single event', function (t) {
   localSocket.emit('testA', { event: 'testA', secretValue: 5 })
   localSocket.emit('testA', { event: 'testA', secretValue: 6 })
 })
+teardown(test)
 
 test('only triggers once on single event', function (t) {
   // if more than 3 assertions are tested then the test failed
@@ -68,6 +53,7 @@ test('only triggers once on single event', function (t) {
     t.equal(typeof 's', 'string')
   }, 100)
 })
+teardown(test)
 
 test('always triggers on chain of events', function (t) {
   t.plan(4)
@@ -99,6 +85,7 @@ test('always triggers on chain of events', function (t) {
   localSocket.emit('testC', { event: 'testC', secretValue: 19 })
   localSocket.emit('testD', { event: 'testD', secretValue: 20 })
 })
+teardown(test)
 
 test('only triggers once on chain of events', function (t) {
   t.plan(2)
@@ -130,6 +117,7 @@ test('only triggers once on chain of events', function (t) {
   localSocket.emit('testC', { event: 'testC', secretValue: 19 })
   localSocket.emit('testD', { event: 'testD', secretValue: 20 })
 })
+teardown(test)
 
 test('will not trigger if not exact chain of events', function (t) {
   t.plan(1)
@@ -163,6 +151,7 @@ test('will not trigger if not exact chain of events', function (t) {
 
   t.equal(typeof 's', 'string')
 })
+teardown(test)
 
 test('always triggers only on exact chain of events', function (t) {
   t.plan(4)
@@ -194,6 +183,7 @@ test('always triggers only on exact chain of events', function (t) {
   localSocket.emit('testC', { event: 'testC', secretValue: 19 })
   localSocket.emit('testD', { event: 'testD', secretValue: 20 })
 })
+teardown(test)
 
 test('only triggers once on exact chain of events', function (t) {
   t.plan(2)
@@ -225,6 +215,7 @@ test('only triggers once on exact chain of events', function (t) {
   localSocket.emit('testC', { event: 'testC', secretValue: 19 })
   localSocket.emit('testD', { event: 'testD', secretValue: 20 })
 })
+teardown(test)
 
 test('will not trigger after disconnect', function (t) {
   t.plan(1)
@@ -259,17 +250,19 @@ test('will not trigger after disconnect', function (t) {
 
   t.equal(typeof 's', 'string')
 })
+teardown(test)
 
 test('will trigger after reconnect', function (t) {
   t.plan(2)
 
-  localSocket.reOn()
+  localSocket.connect()
   localSocket.on('testA', function ({ event, secretValue }) {
     t.equal(event, 'testA')
     t.equal(secretValue, 2)
   })
   localSocket.emit('testA', { event: 'testA', secretValue: 2 })
 })
+teardown(test)
 
 test('will not trigger after unsubscribe', function (t) {
   t.plan(2)
@@ -284,6 +277,7 @@ test('will not trigger after unsubscribe', function (t) {
 
   localSocket.emit('testA', { event: 'testA', secretValue: 5 })
 })
+teardown(test)
 
 test('will trigger after reconnect', function (t) {
   t.plan(4)
@@ -309,3 +303,4 @@ test('will trigger after reconnect', function (t) {
 
   localSocket.emit('testA', { event: 'testA', secretValue: 5 })
 })
+teardown(test)

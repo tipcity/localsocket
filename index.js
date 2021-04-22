@@ -5,6 +5,8 @@ const randomSequentialId = () => new Date().getTime().toString(36)
 
 function LocalSocket (name) {
   this.callbacks = []
+  this.keys = {}
+
   if (name) this.name = name
   if (!this) {
     throw new Error(
@@ -17,13 +19,14 @@ function LocalSocket (name) {
 
   this.connected = true
   this.on = (event, cb) => {
+    const key = randomSequentialId()
     if (!this.connected) return
     const isList = Array.isArray(event)
-    return this.callbacks.push({
+    const cbObj = {
       event: isList ? event.map((e) => e.trim()).join(' ') : String(event),
       cb: typeof cb === 'function' ? cb : () => {},
       callable: true,
-      key: randomSequentialId(),
+      key,
       callType: 'on',
       callsCount: 0,
       isTrainOfEvent: isList,
@@ -33,7 +36,12 @@ function LocalSocket (name) {
         order: 'loose',
         registered: ''
       })
-    })
+    }
+    this.callbacks.push(cbObj)
+
+    this.keys[key] = cbObj
+
+    return key
   }
 
   this.onOrderOf = (event, cb) => {
@@ -147,19 +155,14 @@ function LocalSocket (name) {
       }
     }
   }
-  this.off = (ref) => {
-    const index = ref - 1
-    if (isNaN(index)) return
-    if (!this.callbacks[index]) return
-    this.callbacks[index].callable = false
+  this.off = (key) => {
+    this.remove(key)
   }
-  this.reOn = (ref) => {
-    const index = ref - 1
-    if (isNaN(index)) return
+  this.reOn = (key) => {
+    if (!key) return
+    if (!this.keys[key]) return
 
-    if (!this.connected) return
-    if (!this.callbacks[index]) return
-    this.callbacks[index].callable = true
+    this.callbacks = this.callbacks.concat(this.keys[key])
   }
   this.connect = () => {
     this.connected = true
@@ -178,6 +181,18 @@ function LocalSocket (name) {
       connections: this.connections,
       connected: this.connected
     })
+  }
+
+  this.remove = (key) => {
+    if (!key) return
+    if (!this.keys[key]) return
+
+    this.callbacks = this.callbacks.filter(cb => cb.key !== key)
+  }
+
+  this.drop = () => {
+    this.keys = {}
+    this.callbacks = []
   }
 
   return this.emit('connect', {
