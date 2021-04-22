@@ -1,0 +1,51 @@
+{
+    "name": "localsocket",
+    "description": "Event emitters for everyone",
+    "version": "1.0.0",
+    "author": {
+        "name": "Rasheed Alabi",
+        "email": "rasheed@conquext.com",
+        "url": "https://conquext.com"
+    },
+    "bugs": {
+        "url": "https://github.com/conquext/localsocket/issues"
+    },
+    "devDependencies": {
+        "airtap": "^3.0.0",
+        "standard": "*",
+        "tape": "^5.0.1"
+    },
+    "homepage": "https://github.com/conquext/localsocket",
+    "keywords": [
+        "localsocket",
+        "websocket",
+        "event emitter",
+        "eventemitter",
+        "event emitter browser",
+        "event emmiter react native"
+    ],
+    "license": "MIT",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/conquext/localsocket.git"
+    },
+    "scripts": {
+        "test": "npm run standardize && npm run test-node",
+        "standardize": "standard --fix",
+        "test-node": "tape test/*.js"
+    },
+    "funding": [{
+            "type": "github",
+            "url": "https://github.com/sponsors/conquext"
+        },
+        {
+            "type": "patreon",
+            "url": "https://www.patreon.com/conquext"
+        },
+        {
+            "type": "consulting",
+            "url": "https://conquext.com/support"
+        }
+    ]
+}

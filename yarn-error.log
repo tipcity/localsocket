@@ -1,0 +1,78 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\arash\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js install
+
+PATH: 
+  C:\Program Files\Go\bin;C:\Python39\Scripts\;C:\Python39\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\iCLS\;C:\Program Files\Intel\Intel(R) Management Engine Components\iCLS\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Common Files\Acronis\SnapAPI\;C:\Program Files (x86)\Acronis\CommandLineTool\;C:\ProgramData\chocolatey\bin;C:\Users\arash\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files\OpenJDK\openjdk-8u282-b08\bin;C:\Program Files\PostgreSQL\13\bin;;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Ruby26-x64\bin;C:\RailsInstaller\Git\cmd;C:\RailsInstaller\Ruby2.2.0\bin;C:\Ruby26\bin;C:\Users\arash\AppData\Local\Microsoft\WindowsApps;C:\Users\arash\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\heroku\bin;C:\Users\arash\AppData\Roaming\nvm;C:\Program Files\nodejs;C:\Users\arash\AppData\Roaming\npm;C:\Users\arash\AppData\Local\Android\Sdk\platform-tools\adb;
+
+Yarn version: 
+  1.22.10
+
+Node version: 
+  14.0.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: getaddrinfo ENOTFOUND registry.yarnpkg.com
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:66:26)
+
+npm manifest: 
+  {
+      "name": "localsocket",
+      "description": "Event emitters for everyone",
+      "version": "1.0.0",
+      "author": {
+          "name": "Rasheed Alabi",
+          "email": "rasheed@conquext.com",
+          "url": "https://conquext.com"
+      },
+      "bugs": {
+          "url": "https://github.com/conquext/localsocket/issues"
+      },
+      "devDependencies": {
+          "airtap": "^3.0.0",
+          "standard": "*",
+          "tape": "^5.0.1"
+      },
+      "homepage": "https://github.com/conquext/localsocket",
+      "keywords": [
+          "localsocket",
+          "websocket",
+          "event emitter",
+          "eventemitter",
+          "event emitter browser",
+          "event emmiter react native"
+      ],
+      "license": "MIT",
+      "main": "index.js",
+      "repository": {
+          "type": "git",
+          "url": "git://github.com/conquext/localsocket.git"
+      },
+      "scripts": {
+          "test": "standard && npm run test-node && npm run test-browser",
+          "test-browser": "airtap -- test/*.js",
+          "test-browser-local": "airtap --local -- test/*.js",
+          "test-node": "tape test/*.js"
+      },
+      "funding": [{
+              "type": "github",
+              "url": "https://github.com/sponsors/conquext"
+          },
+          {
+              "type": "patreon",
+              "url": "https://www.patreon.com/conquext"
+          },
+          {
+              "type": "consulting",
+              "url": "https://conquext.com/support"
+          }
+      ]
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
