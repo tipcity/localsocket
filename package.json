@@ -1,5 +1,5 @@
 {
-    "name": "localsocket",
+    "name": "@tipcity/localsocket",
     "description": "Event emitters for everyone",
     "version": "1.0.0",
     "author": {
