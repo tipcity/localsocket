@@ -4,18 +4,18 @@
     "version": "1.0.0",
     "author": {
         "name": "Rasheed Alabi",
-        "email": "rasheed@conquext.com",
+        "email": "rasheed@tipcity.co",
         "url": "https://conquext.com"
     },
     "bugs": {
-        "url": "https://github.com/conquext/localsocket/issues"
+        "url": "https://github.com/tipcity/localsocket/issues"
     },
     "devDependencies": {
         "airtap": "^3.0.0",
         "standard": "*",
         "tape": "^5.0.1"
     },
-    "homepage": "https://github.com/conquext/localsocket",
+    "homepage": "https://github.com/tipcity/localsocket",
     "keywords": [
         "localsocket",
         "websocket",
@@ -28,7 +28,7 @@
     "main": "index.js",
     "repository": {
         "type": "git",
-        "url": "git://github.com/conquext/localsocket.git"
+        "url": "git://github.com/tipcity/localsocket.git"
     },
     "scripts": {
         "test": "npm run standardize && npm run test-node",
@@ -45,7 +45,7 @@
         },
         {
             "type": "consulting",
-            "url": "https://conquext.com/support"
+            "url": "https://tipcity.co/support"
         }
     ]
 }
