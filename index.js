@@ -55,10 +55,10 @@ function LocalSocket (name) {
 
     this.keys[key] = cbObj
 
-    if(this.events[event]) {
-      this.events[event] = { maxListeners: undefined, count: 1 }
-    } else {
+    if (this.events[event]) {
       this.events[event].count = this.events[event].count + 1
+    } else {
+      this.events[event] = { maxListeners: undefined, count: 1 }
     }
 
     this.maxListeners = this.maxListeners + 1
@@ -66,15 +66,15 @@ function LocalSocket (name) {
   }
 
   this.limitConnections = (value) => {
-    if (typeof value !== "number") {
+    if (typeof value !== 'number') {
       throw new Error(
-        "[LocalSocket]: Expects value to be a number"
-      );
+        '[LocalSocket]: Expects value to be a number'
+      )
     }
     if (!value) {
-      throw new Error("[LocalSocket]: Max listeners must be greater than zero");
+      throw new Error('[LocalSocket]: Max listeners must be greater than zero')
     }
-    this.maxListeners = parseInt(value);
+    this.maxListeners = parseInt(value)
   }
 
   this.setEventMaxListener = (eventName, value) => {
@@ -96,32 +96,32 @@ function LocalSocket (name) {
       console.warn('[LocalSocket]: Discarding..., Instance is disconnected')
       return
     }
-        if (this.maxListeners) {
-          const listnersCount = this.callbacks.length;
-          if (listnersCount >= this.maxListeners) {
-            throw new Error("[LocalSocket]: Max listener limit reached");
-          }
-          if (listnersCount > 5 && this.maxListeners - listnersCount < 5) {
-            console.warn("[LocalSocket]: isteners approaching limit");
-          }
-        }
+    if (this.maxListeners) {
+      const listnersCount = this.callbacks.length
+      if (listnersCount >= this.maxListeners) {
+        throw new Error('[LocalSocket]: Max listener limit reached')
+      }
+      if (listnersCount > 5 && this.maxListeners - listnersCount < 5) {
+        console.warn('[LocalSocket]: isteners approaching limit')
+      }
+    }
 
-        if (this.events[event] && this.events[event].maxListeners) {
-          const listnersCount = this.events.count;
-          if (listnersCount >= this.events[event].maxListeners) {
-            throw new Error(
+    if (this.events[event] && this.events[event].maxListeners) {
+      const listnersCount = this.events.count
+      if (listnersCount >= this.events[event].maxListeners) {
+        throw new Error(
               `[LocalSocket]: Max listener limit reached for ${event}`
-            );
-          }
-          if (
-            listnersCount > 5 &&
+        )
+      }
+      if (
+        listnersCount > 5 &&
             this.events[event].maxListeners - listnersCount < 5
-          ) {
-            console.warn(
+      ) {
+        console.warn(
               `[LocalSocket]: isteners approaching limit for ${event}`
-            );
-          }
-        }
+        )
+      }
+    }
     const isList = Array.isArray(event)
     return this.callbacks.push({
       event: isList ? event.map((e) => e.trim()).join(' ') : String(event),
@@ -143,33 +143,33 @@ function LocalSocket (name) {
     if (!this.connected) {
       console.warn('[LocalSocket]: Discarding..., Instance is disconnected')
       return
-    } 
-        if (this.maxListeners) {
-          const listnersCount = this.callbacks.length;
-          if (listnersCount >= this.maxListeners) {
-            throw new Error("[LocalSocket]: Max listener limit reached");
-          }
-          if (listnersCount > 5 && this.maxListeners - listnersCount < 5) {
-            console.warn("[LocalSocket]: isteners approaching limit");
-          }
-        }
+    }
+    if (this.maxListeners) {
+      const listnersCount = this.callbacks.length
+      if (listnersCount >= this.maxListeners) {
+        throw new Error('[LocalSocket]: Max listener limit reached')
+      }
+      if (listnersCount > 5 && this.maxListeners - listnersCount < 5) {
+        console.warn('[LocalSocket]: isteners approaching limit')
+      }
+    }
 
-        if (this.events[event] && this.events[event].maxListeners) {
-          const listnersCount = this.events.count;
-          if (listnersCount >= this.events[event].maxListeners) {
-            throw new Error(
+    if (this.events[event] && this.events[event].maxListeners) {
+      const listnersCount = this.events.count
+      if (listnersCount >= this.events[event].maxListeners) {
+        throw new Error(
               `[LocalSocket]: Max listener limit reached for ${event}`
-            );
-          }
-          if (
-            listnersCount > 5 &&
+        )
+      }
+      if (
+        listnersCount > 5 &&
             this.events[event].maxListeners - listnersCount < 5
-          ) {
-            console.warn(
+      ) {
+        console.warn(
               `[LocalSocket]: isteners approaching limit for ${event}`
-            );
-          }
-        }
+        )
+      }
+    }
     const isList = Array.isArray(event)
     return this.callbacks.push({
       event: isList ? event.map((e) => e.trim()).join(' ') : String(event),
@@ -192,29 +192,29 @@ function LocalSocket (name) {
     if (!this.connected) {
       console.warn('[LocalSocket]: Discarding..., Instance is disconnected')
       return
-    }    
+    }
     if (this.maxListeners) {
-      const listnersCount = this.callbacks.length;
+      const listnersCount = this.callbacks.length
       if (listnersCount >= this.maxListeners) {
-        throw new Error("[LocalSocket]: Max listener limit reached");
+        throw new Error('[LocalSocket]: Max listener limit reached')
       }
       if (listnersCount > 5 && this.maxListeners - listnersCount < 5) {
-        console.warn("[LocalSocket]: isteners approaching limit");
+        console.warn('[LocalSocket]: isteners approaching limit')
       }
     }
 
     if (this.events[event] && this.events[event].maxListeners) {
-      const listnersCount = this.events.count;
+      const listnersCount = this.events.count
       if (listnersCount >= this.events[event].maxListeners) {
         throw new Error(
           `[LocalSocket]: Max listener limit reached for ${event}`
-        );
+        )
       }
       if (
         listnersCount > 5 &&
         this.events[event].maxListeners - listnersCount < 5
       ) {
-        console.warn(`[LocalSocket]: isteners approaching limit for ${event}`);
+        console.warn(`[LocalSocket]: isteners approaching limit for ${event}`)
       }
     }
 
