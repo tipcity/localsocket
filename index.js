@@ -6,6 +6,8 @@ const randomSequentialId = () => new Date().getTime().toString(36)
 function LocalSocket (name) {
   this.callbacks = []
   this.keys = {}
+  this.maxListeners = undefined
+  this.events = {}
 
   if (name) this.name = name
   if (!this) {
@@ -19,6 +21,18 @@ function LocalSocket (name) {
 
   this.connected = true
   this.on = (event, cb) => {
+    if (this.maxListeners) {
+      const listnersCount = this.callbacks.length
+      if (listnersCount >= this.maxListeners) { throw new Error('[LocalSocket]: Max listener limit reached') }
+      if (listnersCount > 5 && this.maxListeners - listnersCount < 5) { console.warn('[LocalSocket]: isteners approaching limit') }
+    }
+
+    if (this.events[event] && this.events[event].maxListeners) {
+      const listnersCount = this.events.count
+      if (listnersCount >= this.events[event].maxListeners) { throw new Error(`[LocalSocket]: Max listener limit reached for ${event}`) }
+      if (listnersCount > 5 && this.events[event].maxListeners - listnersCount < 5) { console.warn(`[LocalSocket]: isteners approaching limit for ${event}`) }
+    }
+
     const key = randomSequentialId()
     if (!this.connected) return
     const isList = Array.isArray(event)
@@ -40,12 +54,31 @@ function LocalSocket (name) {
     this.callbacks.push(cbObj)
 
     this.keys[key] = cbObj
+    this.events[event] = { maxListeners: undefined, count: 1 }
 
+    this.maxListeners = this.maxListeners + 1
     return key
   }
 
+  this.setEventMaxListener = (eventName, value) => {
+    if (typeof eventName !== 'string' || typeof value !== 'number') {
+      throw new Error('[LocalSocket]: Expects event name to be a string and value to be a number')
+    }
+    if (!value) {
+      throw new Error('[LocalSocket]: Max listeners must be greater than zero')
+    }
+    if (!this.events[eventName]) {
+      console.warn('[LocalSocket]: evemt was never registered')
+      return
+    }
+    this.events[eventName].maxListeners = parseInt(value)
+  }
+
   this.onOrderOf = (event, cb) => {
-    if (!this.connected) return
+    if (!this.connected) {
+      console.warn('[LocalSocket]: Discarding..., Instance is disconnected')
+      return
+    }
     const isList = Array.isArray(event)
     return this.callbacks.push({
       event: isList ? event.map((e) => e.trim()).join(' ') : String(event),
@@ -64,8 +97,10 @@ function LocalSocket (name) {
     })
   }
   this.onceOrderOf = (event, cb) => {
-    if (!this.connected) return
-    const isList = Array.isArray(event)
+    if (!this.connected) {
+      console.warn('[LocalSocket]: Discarding..., Instance is disconnected')
+      return
+    } const isList = Array.isArray(event)
     return this.callbacks.push({
       event: isList ? event.map((e) => e.trim()).join(' ') : String(event),
       cb: typeof cb === 'function' ? cb : () => {},
@@ -84,8 +119,10 @@ function LocalSocket (name) {
   }
 
   this.once = (event, cb) => {
-    if (!this.connected) return
-
+    if (!this.connected) {
+      console.warn('[LocalSocket]: Discarding..., Instance is disconnected')
+      return
+    }
     const isList = Array.isArray(event)
     return this.callbacks.push({
       event: isList ? event.map((e) => e.trim()).join(' ') : String(event),
@@ -105,8 +142,10 @@ function LocalSocket (name) {
   }
 
   this.emit = (event, args) => {
-    if (!this.connected) return
-
+    if (!this.connected) {
+      console.warn('[LocalSocket]: Discarding..., Instance is disconnected')
+      return
+    }
     for (const c of this.callbacks) {
       const eventMatch = !c.isTrainOfEvent
         ? c.event === event
