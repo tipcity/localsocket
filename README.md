@@ -49,7 +49,7 @@ localSocket.connect(); // manually connect to localsocket
 localSocket.disconnect(); // manually disconnect from localsocket
 localSocket.on('foo', () => {}); // trigger alawys
 localSocket.once('bar', () => {}); // trigger only once 
-localSocket.on(['foo bar baz'], () => {}); // when the three events are executed in this order, will ignore other events in between
+localSocket.on(['foo bar baz'], () => {}); // when the three events are dispatched in this order, will ignore other events in between
 localSocket.onOrderOf(['foo bar baz'], () => {}); // called always when the three events must have happened sequentially without a break
 localSocket.onceOrderOf(['foo bar baz'], () => {}); // called only once when the three events must have happened sequentially without a break
 localSocket.remove(key); // remove a single listener from the register
