@@ -47,13 +47,19 @@ localSocket = new LocalSocket("test");
 
 localSocket.connect(); // manually connect to localsocket
 localSocket.disconnect(); // manually disconnect from localsocket
-localSocket.on('foo', () => {}); // trigger alawys
+localSocket.on('foo', () => {}); // trigger alawys, returns an eventKey
 localSocket.once('bar', () => {}); // trigger only once 
 localSocket.on(['foo bar baz'], () => {}); // when the three events are dispatched in this order, will ignore other events in between
 localSocket.onOrderOf(['foo bar baz'], () => {}); // called always when the three events must have happened sequentially without a break
 localSocket.onceOrderOf(['foo bar baz'], () => {}); // called only once when the three events must have happened sequentially without a break
-localSocket.remove(key); // remove a single listener from the register
+localSocket.remove(eventKey); // remove a single listener from the register
 localSocket.drop(); // drop the localsocket instance
+
+
+localSocket.limitConnections(value); // set a max listener for this event. Throws an error, if a new listener is registered passed the limit
+localSocket.setEventMaxListener(eventKey, value); // set a max listener for this event. Throws an error, if a new listener is registered passed the limit
+
+
 ```
 
 Works in all javascript environment
