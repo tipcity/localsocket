@@ -15,7 +15,7 @@
 ### install
 
 ```
-npm install @tipcity/localsocket `or` yarn install @tipcity/localsocket
+npm install @tipcity/localsocket `or` yarn add @tipcity/localsocket
 ```
 
 ### usage
@@ -66,4 +66,4 @@ Works in all javascript environment
 
 ### license
 
-MIT. Copyright (c) [Tipcity](http://tipcity.co).
+MIT. Copyright (c) [Tipcisty](http://app.tipcity.co).

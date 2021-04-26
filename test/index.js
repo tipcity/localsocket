@@ -1,4 +1,4 @@
-const LocalSocket = require('../')
+const LocalSocket = require('../lib/').default
 const test = require('tape')
 
 const localSocket = new LocalSocket()
@@ -214,11 +214,16 @@ test('only triggers once on exact chain of events', function (t) {
   localSocket.emit('testB', { event: 'testB', secretValue: 18 })
   localSocket.emit('testC', { event: 'testC', secretValue: 19 })
   localSocket.emit('testD', { event: 'testD', secretValue: 20 })
+
+  localSocket.emit('testA', { event: 'testA', secretValue: 17 })
+  localSocket.emit('testB', { event: 'testB', secretValue: 18 })
+  localSocket.emit('testC', { event: 'testC', secretValue: 19 })
+  localSocket.emit('testD', { event: 'testD', secretValue: 20 })
 })
 teardown(test)
 
 test('will not trigger after disconnect', function (t) {
-  t.plan(1)
+  t.plan()
 
   let counter = 0
   localSocket.disconnect()
@@ -248,9 +253,8 @@ test('will not trigger after disconnect', function (t) {
   localSocket.emit('testC', { event: 'testC', secretValue: 19 })
   localSocket.emit('testD', { event: 'testD', secretValue: 20 })
 
-  t.equal(typeof 's', 'string')
+  t.end()
 })
-teardown(test)
 
 test('will trigger after reconnect', function (t) {
   t.plan(2)

@@ -6,10 +6,25 @@
     "bugs": {
         "url": "https://github.com/tipcity/localsocket/issues"
     },
+    "publishConfig": {
+        "access": "public"
+    },
+    "files": [
+        "lib"
+    ],
+    "standard": {
+        "ignore": [
+            "/lib/**",
+            "/node_modules/**"
+        ]
+    },
     "devDependencies": {
+        "@types/node": "^14.14.41",
         "airtap": "^3.0.0",
         "standard": "*",
-        "tape": "^5.0.1"
+        "tape": "^5.0.1",
+        "ts-node": "^9.1.1",
+        "typescript": "^4.2.4"
     },
     "homepage": "https://github.com/tipcity/localsocket",
     "keywords": [
@@ -30,7 +45,11 @@
         "test": "npm run standardize && npm run test-node",
         "standardize": "standard --fix",
         "test-node": "tape test/*.js",
-        "release": "npm publish --access public"
+        "release": "npm publish --access public",
+        "publish": "npm version patch && npm run build && npm publish",
+        "dev": "cd src & tsc -w & nodemon .",
+        "build": "tsc",
+        "build:check": "tsc --noEmit"
     },
     "funding": [{
             "type": "github",
