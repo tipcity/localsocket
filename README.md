@@ -69,4 +69,4 @@ Works in all javascript environment
 
 ### license
 
-MIT. Copyright (c) [Tipcisty](http://app.tipcity.co).
+MIT. Copyright (c) [Tipcity](http://app.tipcity.co).
