@@ -1,16 +1,15 @@
 /*! localsocket. MIT License. */
 
 
-export default LocalSocket;
 
-declare class LocalSocket {
-  constructor(name?: string);
-}
+// declare class LocalSocket {
+//   constructor(name?: string);
+// }
 
 const randomSequentialId = () => new Date().getTime().toString(36);
 
-type EventKey = string | symbol;
-type EventType = string | symbol;
+export type EventKey = string | symbol;
+export type EventType = string | symbol;
 
 type Fn = (...arg: any) => any;
 
@@ -28,15 +27,17 @@ type CallbackObject = {
   isTrainOfEvent: boolean;
 };
 
-interface LocalSocket {
+export interface LocalSocket {
+  name?: string | symbol;
   connected: boolean;
   connectionId: string | symbol;
   connections: string[];
   callbacks: CallbackObject[];
   keys: Record<EventKey, any>;
   maxListeners?: number;
-  validate: (event: EventType | EventType[]) => boolean | undefined;
   setEventMaxListener: (event: EventType, value: number) => void;
+  limitConnections: (value: number) => void;
+  validate: (event: EventType | EventType[]) => boolean | undefined;
   on: (event: EventType | EventType[], cb: Fn) => string | undefined;
   once: (event: EventType | EventType[], cb: Fn) => string | undefined;
   onceOrderOf: (event: EventType | EventType[], cb: Fn) => string | undefined;
@@ -59,7 +60,7 @@ type Events = string[];
  * @description Manages the event within a sandbox
  * @param name (optional) Name of the LocalSocket instance
  */
-function LocalSocket(name?:string): LocalSocket {
+const LocalSocket = (function (this: LocalSocket, name?: string) {
   this.callbacks = [];
   this.keys = {};
   this.maxListeners = undefined;
@@ -124,7 +125,7 @@ function LocalSocket(name?:string): LocalSocket {
     this.maxListeners = parseInt(String(value));
   };
 
-  this.setEventMaxListener = function (eventName: string, value: number) {
+  this.setEventMaxListener = function (eventName: EventType, value: number) {
     if (typeof eventName !== "string" || typeof value !== "number") {
       throw new Error(
         "[LocalSocket]: Expects event name to be a string and value to be a number"
@@ -193,7 +194,7 @@ function LocalSocket(name?:string): LocalSocket {
    * @param cb The callback function to evoke when the events are observed
    * @returns A reference key of the listener
    */
-  this.onOrderOf = function (event: EventType, cb: Fn) {
+  this.onOrderOf = function (event: EventType | EventType[], cb: Fn) {
     const validState = this.validate(event);
     if (!validState) return;
     const isList = Array.isArray(event);
@@ -240,7 +241,7 @@ function LocalSocket(name?:string): LocalSocket {
    * @param cb The callback function to evoke when the events are observed
    * @returns A reference key of the listener
    */
-  this.onceOrderOf = function (event: EventType, cb: Fn) {
+  this.onceOrderOf = function (event: EventType | EventType[], cb: Fn) {
     const validState = this.validate(event);
     if (!validState) return;
 
@@ -401,7 +402,7 @@ function LocalSocket(name?:string): LocalSocket {
    * @description Disconnect a listener
    * @param key Idenitifies the listener to disconnect
    */
-  this.off = function (key: string) {
+  this.off = function (key: EventKey) {
     this.remove(key);
   };
 
@@ -409,7 +410,7 @@ function LocalSocket(name?:string): LocalSocket {
    * @description Reconnect a listener
    * @param key Identifies the listner to reconnect
    */
-  this.reOn = function (key: string) {
+  this.reOn = function (key: EventKey) {
     if (!key) return;
     if (!this.keys[key]) return;
 
@@ -453,9 +454,12 @@ function LocalSocket(name?:string): LocalSocket {
 
   //   this.connect = function(_url?:string) {};
 
-  return this.emit("connect", {
-    connectionId: this.connectionId,
-    connections: this.connections,
-    connected: this.connected,
-  });
-}
+  //   this.emit("connect", {
+  //     connectionId: this.connectionId,
+  //     connections: this.connections,
+  //     connected: this.connected,
+  //   });
+  // return this;
+} as any) as { new (name?: string): LocalSocket };
+
+export default LocalSocket;

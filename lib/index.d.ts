@@ -1,7 +1,6 @@
 /*! localsocket. MIT License. */
-export default LocalSocket;
-declare type EventKey = string | symbol;
-declare type EventType = string | symbol;
+export declare type EventKey = string | symbol;
+export declare type EventType = string | symbol;
 declare type Fn = (...arg: any) => any;
 declare type CallbackObject = {
     eventCount: any;
@@ -16,15 +15,17 @@ declare type CallbackObject = {
     callsCount: number;
     isTrainOfEvent: boolean;
 };
-interface LocalSocket {
+export interface LocalSocket {
+    name?: string | symbol;
     connected: boolean;
     connectionId: string | symbol;
     connections: string[];
     callbacks: CallbackObject[];
     keys: Record<EventKey, any>;
     maxListeners?: number;
-    validate: (event: EventType | EventType[]) => boolean | undefined;
     setEventMaxListener: (event: EventType, value: number) => void;
+    limitConnections: (value: number) => void;
+    validate: (event: EventType | EventType[]) => boolean | undefined;
     on: (event: EventType | EventType[], cb: Fn) => string | undefined;
     once: (event: EventType | EventType[], cb: Fn) => string | undefined;
     onceOrderOf: (event: EventType | EventType[], cb: Fn) => string | undefined;
@@ -41,5 +42,8 @@ interface LocalSocket {
 /**
  * @constructor
  * @this LocalSocket
+ * @description Manages the event within a sandbox
+ * @param name (optional) Name of the LocalSocket instance
  */
-declare function LocalSocket(name?: string): LocalSocket;
+declare const LocalSocket: new (name?: string | undefined) => LocalSocket;
+export default LocalSocket;
