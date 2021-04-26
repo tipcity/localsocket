@@ -3,6 +3,10 @@
 
 export default LocalSocket;
 
+declare class LocalSocket {
+  constructor(name?: string);
+}
+
 const randomSequentialId = () => new Date().getTime().toString(36);
 
 type EventKey = string | symbol;
@@ -52,6 +56,8 @@ type Events = string[];
 /**
  * @constructor
  * @this LocalSocket
+ * @description Manages the event within a sandbox
+ * @param name (optional) Name of the LocalSocket instance
  */
 function LocalSocket(name?:string): LocalSocket {
   this.callbacks = [];
@@ -71,11 +77,11 @@ function LocalSocket(name?:string): LocalSocket {
 
   this.connected = true;
 
-  this.validate = function(event: EventType | EventType[]) {
+  this.validate = function (event: EventType | EventType[]) {
     if (!this.connected) {
-    //   console.warn(`[LocalSocket]: Discarding...${([] as EventType[]).concat(event).join(" ")}, Instance is disconnected`);
+      //   console.warn(`[LocalSocket]: Discarding...${([] as EventType[]).concat(event).join(" ")}, Instance is disconnected`);
       console.warn(`[LocalSocket]: Instance is disconnected`);
-    //   return;
+      //   return;
     }
     if (this.maxListeners) {
       const listnersCount = this.callbacks.length;
@@ -107,7 +113,7 @@ function LocalSocket(name?:string): LocalSocket {
     });
     return true;
   };
-  
+
   this.limitConnections = function (value: number) {
     if (typeof value !== "number") {
       throw new Error("[LocalSocket]: Expects value to be a number");
@@ -133,12 +139,18 @@ function LocalSocket(name?:string): LocalSocket {
     }
     this.events[eventName].maxListeners = parseInt(String(value));
   };
-  
-  this.on = function(event: EventType | EventType[], cb:Fn) {
+
+  /**
+   * @description Trigger always when a sequence of events are emitted loosely in order
+   * @param event A string, symbol of an array of events to register
+   * @param cb The callback function to evoke when the events are observed
+   * @returns A reference key of the listener
+   */
+  this.on = function (event: EventType | EventType[], cb: Fn) {
     const validState = this.validate(event);
-    if(!validState) return;
+    if (!validState) return;
     const key = randomSequentialId();
-    
+
     const isList = Array.isArray(event);
     const cbObj = {
       event: isList
@@ -164,9 +176,10 @@ function LocalSocket(name?:string): LocalSocket {
 
     this.keys[key] = cbObj;
 
-     const stringigiedEvent = ([] as EventType[]).concat(event).join(" ");
+    const stringigiedEvent = ([] as EventType[]).concat(event).join(" ");
     if (this.events[stringigiedEvent]) {
-      this.events[stringigiedEvent].count = this.events[stringigiedEvent].count + 1;
+      this.events[stringigiedEvent].count =
+        this.events[stringigiedEvent].count + 1;
     } else {
       this.events[stringigiedEvent] = { maxListeners: undefined, count: 1 };
     }
@@ -174,53 +187,65 @@ function LocalSocket(name?:string): LocalSocket {
     return key;
   };
 
-  this.onOrderOf = function(event:EventType, cb:Fn) {
+  /**
+   * @description Trigger always when a sequence of events are emitted strictly in order
+   * @param event A string, symbol of an array of events to register
+   * @param cb The callback function to evoke when the events are observed
+   * @returns A reference key of the listener
+   */
+  this.onOrderOf = function (event: EventType, cb: Fn) {
     const validState = this.validate(event);
     if (!validState) return;
     const isList = Array.isArray(event);
-        const key = randomSequentialId();
+    const key = randomSequentialId();
 
-        const cbObj = {
-          event: isList
-            ? ([] as EventType[])
-                .concat(event)
-                .map((e: EventType) => String(e).trim())
-                .join(" ")
-            : String(event),
-          cb: typeof cb === "function" ? cb : () => {},
-          callable: true,
-          callType: "on",
-          callsCount: 0,
-          isTrainOfEvent: isList,
-          ...(isList && {
-            eventCount: ([] as EventType[]).concat(event).length,
-            matchCount: 0,
-            order: "strict",
-            registered: "",
-            sink: {}
-          }),
-        };
+    const cbObj = {
+      event: isList
+        ? ([] as EventType[])
+            .concat(event)
+            .map((e: EventType) => String(e).trim())
+            .join(" ")
+        : String(event),
+      cb: typeof cb === "function" ? cb : () => {},
+      callable: true,
+      callType: "on",
+      callsCount: 0,
+      isTrainOfEvent: isList,
+      ...(isList && {
+        eventCount: ([] as EventType[]).concat(event).length,
+        matchCount: 0,
+        order: "strict",
+        registered: "",
+        sink: {},
+      }),
+    };
 
     this.callbacks.push(cbObj);
 
-     this.keys[key] = cbObj;
+    this.keys[key] = cbObj;
 
-     const stringigiedEvent = ([] as EventType[]).concat(event).join(" ");
-     if (this.events[stringigiedEvent]) {
-       this.events[stringigiedEvent].count =
-         this.events[stringigiedEvent].count + 1;
-     } else {
-       this.events[stringigiedEvent] = { maxListeners: undefined, count: 1 };
-     }
+    const stringigiedEvent = ([] as EventType[]).concat(event).join(" ");
+    if (this.events[stringigiedEvent]) {
+      this.events[stringigiedEvent].count =
+        this.events[stringigiedEvent].count + 1;
+    } else {
+      this.events[stringigiedEvent] = { maxListeners: undefined, count: 1 };
+    }
 
-     return key;
+    return key;
   };
-  this.onceOrderOf = function(event:EventType, cb:Fn) {
+  /**
+   * @description Trigger at most once when a sequence of events are emitted strictly in order
+   * @param event A string, symbol of an array of events to register
+   * @param cb The callback function to evoke when the events are observed
+   * @returns A reference key of the listener
+   */
+  this.onceOrderOf = function (event: EventType, cb: Fn) {
     const validState = this.validate(event);
     if (!validState) return;
 
     const isList = Array.isArray(event);
-        const key = randomSequentialId();
+    const key = randomSequentialId();
 
     const cbObj = {
       event: isList
@@ -240,35 +265,41 @@ function LocalSocket(name?:string): LocalSocket {
         matchCount: 0,
         order: "strict",
         registered: "",
-        sink: {}
+        sink: {},
       }),
     };
-     this.keys[key] = cbObj;
-        this.callbacks.push(cbObj);
+    this.keys[key] = cbObj;
+    this.callbacks.push(cbObj);
 
-     const stringigiedEvent = ([] as EventType[]).concat(event).join(" ");
-     if (this.events[stringigiedEvent]) {
-       this.events[stringigiedEvent].count =
-         this.events[stringigiedEvent].count + 1;
-     } else {
-       this.events[stringigiedEvent] = { maxListeners: undefined, count: 1 };
-     }
+    const stringigiedEvent = ([] as EventType[]).concat(event).join(" ");
+    if (this.events[stringigiedEvent]) {
+      this.events[stringigiedEvent].count =
+        this.events[stringigiedEvent].count + 1;
+    } else {
+      this.events[stringigiedEvent] = { maxListeners: undefined, count: 1 };
+    }
 
-     return key;
+    return key;
   };
 
+  /**
+   * @description Trigger at most once when a sequence of events are emitted loosely in order
+   * @param event A string, symbol of an array of events to register
+   * @param cb The callback function to evoke when the events are observed
+   * @returns A reference key of the listener
+   */
   this.once = function (event: EventType | EventType[], cb: Fn) {
     const validState = this.validate(event);
     if (!validState) return;
 
     const isList = Array.isArray(event);
-        const key = randomSequentialId();
+    const key = randomSequentialId();
 
     const cbObj = {
       event: isList
         ? ([] as EventType[])
             .concat(event)
-            .map((e:EventType) => String(e).trim())
+            .map((e: EventType) => String(e).trim())
             .join(" ")
         : String(event),
       cb: typeof cb === "function" ? cb : () => {},
@@ -289,25 +320,29 @@ function LocalSocket(name?:string): LocalSocket {
 
     this.keys[key] = cbObj;
 
-     const stringigiedEvent = ([] as EventType[]).concat(event).join(" ");
-     if (this.events[stringigiedEvent]) {
-       this.events[stringigiedEvent].count =
-         this.events[stringigiedEvent].count + 1;
-     } else {
-       this.events[stringigiedEvent] = { maxListeners: undefined, count: 1 };
-     }
+    const stringigiedEvent = ([] as EventType[]).concat(event).join(" ");
+    if (this.events[stringigiedEvent]) {
+      this.events[stringigiedEvent].count =
+        this.events[stringigiedEvent].count + 1;
+    } else {
+      this.events[stringigiedEvent] = { maxListeners: undefined, count: 1 };
+    }
 
-     return key;
-    
+    return key;
   };
 
-  this.emit = function (event: EventType, args:any) {
+  /**
+   * @description Dispatch an event
+   */
+  this.emit = function (event: EventType, args: any) {
     if (!this.connected) {
-            console.warn(
-              `[LocalSocket]: Discarding...${([] as EventType[])
-                .concat(event)
-                .join(" ")}, ${this.name ? this.name : 'LocalSocket'} Instance is disconnected`
-            );
+      console.warn(
+        `[LocalSocket]: Discarding...${([] as EventType[])
+          .concat(event)
+          .join(" ")}, ${
+          this.name ? this.name : "LocalSocket"
+        } Instance is disconnected`
+      );
 
       return;
     }
@@ -319,7 +354,9 @@ function LocalSocket(name?:string): LocalSocket {
       if (c.isTrainOfEvent) {
         if (c.order === "strict" && !eventMatch) {
           if (
-            String(c.event).includes(String(c.registered + ` ${String(event)}`).trim())
+            String(c.event).includes(
+              String(c.registered + ` ${String(event)}`).trim()
+            )
           ) {
             //
           } else {
@@ -360,16 +397,25 @@ function LocalSocket(name?:string): LocalSocket {
       }
     }
   };
-  this.off = function(key:string) {
+  /**
+   * @description Disconnect a listener
+   * @param key Idenitifies the listener to disconnect
+   */
+  this.off = function (key: string) {
     this.remove(key);
   };
-  this.reOn = function(key:string) {
+
+  /**
+   * @description Reconnect a listener
+   * @param key Identifies the listner to reconnect
+   */
+  this.reOn = function (key: string) {
     if (!key) return;
     if (!this.keys[key]) return;
 
     this.callbacks = this.callbacks.concat(this.keys[key]);
   };
-  this.connect = function() {
+  this.connect = function () {
     this.connected = true;
     this.emit("connect", {
       connectionId: this.connectionId,
@@ -378,7 +424,7 @@ function LocalSocket(name?:string): LocalSocket {
     });
   };
 
-  this.disconnect = function() {
+  this.disconnect = function () {
     if (!this.connected) return;
     this.connected = false;
     this.emit("disconnect", {
@@ -388,23 +434,25 @@ function LocalSocket(name?:string): LocalSocket {
     });
   };
 
-  this.remove = function(key: EventKey){
+  this.remove = function (key: EventKey) {
     if (!key) return;
     if (!this.keys[key]) return;
     delete this.events[key];
 
-    this.callbacks = this.callbacks.filter((cb:CallbackObject) => cb.key !== key);
+    this.callbacks = this.callbacks.filter(
+      (cb: CallbackObject) => cb.key !== key
+    );
   };
 
-  this.drop = function() {
+  this.drop = function () {
     this.keys = {};
     this.callbacks = [];
     this.events = {};
     // this.maxListeners = undefined
   };
 
-//   this.connect = function(_url?:string) {};
-  
+  //   this.connect = function(_url?:string) {};
+
   return this.emit("connect", {
     connectionId: this.connectionId,
     connections: this.connections,
