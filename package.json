@@ -36,7 +36,7 @@
         "event emmiter react native"
     ],
     "license": "MIT",
-    "main": "index.js",
+    "main": "lib/index.js",
     "repository": {
         "type": "git",
         "url": "git://github.com/tipcity/localsocket.git"
